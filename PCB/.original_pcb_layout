@@ -8,7 +8,7 @@
 	)
 	(paper "A4")
 	(title_block
-		(title "template_pretty_name")
+		(title "EOS Homework Board")
 	)
 	(layers
 		(0 "F.Cu" signal "F.Cu_Signal")
