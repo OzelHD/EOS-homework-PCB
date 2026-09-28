@@ -1,0 +1,139 @@
+name: KiCAD Export
+
+on:
+  push:
+    tags:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: false
+          lfs: true
+
+      - name: Checkout private KiCad libraries
+        env:
+          PARTS_TOKEN: ${{ secrets.Key_To_Parts }}
+        run: |
+          git config --global url."https://x-access-token:${PARTS_TOKEN}@github.com/".insteadOf "https://github.com/"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Create output directory
+        run: mkdir -p Outputs
+
+      - name: Export ERC
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./Outputs:/home/kicad/Outputs \
+            ghcr.io/aris-space/kicad:main \
+            kicad-cli sch erc \
+            --output Outputs/erc_report.rpt \
+            PCB/"${REPO_NAME#*/}".kicad_sch
+
+      - name: Export schematic PDF
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./Outputs:/home/kicad/Outputs \
+            ghcr.io/aris-space/kicad:main \
+            kicad-cli sch export pdf \
+            --theme "/home/kicad/.local/share/kicad/9.0/3rdparty/colors/com_github_pointhi_kicad-color-schemes_wlight/wlight.json" \
+            --output Outputs/"${REPO_NAME#*/}"_Schematic.pdf \
+            PCB/"${REPO_NAME#*/}".kicad_sch
+
+      - name: Export BOM CSV
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./Outputs:/home/kicad/Outputs \
+            ghcr.io/aris-space/kicad:main \
+            kicad-cli sch export bom \
+            --fields 'Reference,Value,Description,Part No.,${QUANTITY}' \
+            --labels "Reference,Value,Description,Part No.,Qty" \
+            --group-by "Value,Part No." \
+            --format-preset "CSV" \
+            --output Outputs/"${REPO_NAME#*/}"_BOM.csv \
+            PCB/"${REPO_NAME#*/}".kicad_sch
+
+      - name: Export DRC
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./Outputs:/home/kicad/Outputs \
+            ghcr.io/aris-space/kicad:main \
+            kicad-cli pcb drc \
+            --schematic-parity \
+            --output Outputs/drc_report.rpt \
+            PCB/"${REPO_NAME#*/}".kicad_pcb
+
+      - name: Export PCB STEP model
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./Outputs:/home/kicad/Outputs \
+            ghcr.io/aris-space/kicad:main \
+            kicad-cli pcb export step \
+            --no-dnp \
+            --subst-models \
+            --output Outputs/"${REPO_NAME#*/}".step \
+            PCB/"${REPO_NAME#*/}".kicad_pcb
+
+      - name: Export netlist
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./Outputs:/home/kicad/Outputs \
+            ghcr.io/aris-space/kicad:main \
+            kicad-cli sch export netlist \
+            --output Outputs/netlist.net \
+            PCB/"${REPO_NAME#*/}".kicad_sch
+
+      - name: Export HTML iBOM
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./Outputs:/home/kicad/Outputs \
+            -e INTERACTIVE_HTML_BOM_NO_DISPLAY=1 \
+            ghcr.io/aris-space/kicad:main \
+            generate_interactive_bom.py \
+            --highlight-pin1 selected \
+            --no-browser \
+            --extra-data-file /home/kicad/Outputs/netlist.net \
+            --extra-fields "Part No." \
+            --normalize-field-case \
+            --dest-dir /home/kicad/Outputs \
+            --name-format "${REPO_NAME#*/}" \
+            PCB/"${REPO_NAME#*/}".kicad_pcb
+
+      - name: Clean up netlist
+        run: rm -f Outputs/netlist.net
+
+      - name: Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Outputs/*

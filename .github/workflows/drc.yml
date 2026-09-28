@@ -1,0 +1,52 @@
+name: KiCAD PCB DRC
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  pcb-drc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: false
+          lfs: true
+
+      - name: Download Asap font
+        run: |
+          mkdir -p fonts
+          wget -q \
+            "https://github.com/google/fonts/raw/main/ofl/asap/Asap%5Bwdth,wght%5D.ttf" \
+            -O fonts/Asap.ttf
+
+      - name: Checkout private KiCad libraries
+        env:
+          PARTS_TOKEN: ${{ secrets.Key_To_Parts }}
+        run: |
+          git config --global url."https://x-access-token:${PARTS_TOKEN}@GitHub.com/".insteadOf "https://github.com/"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+          git submodule update --remote PCB/Parts/kicad-extra-repo
+
+      - name: Run DRC
+        run: |
+          PCB_FILE=$(find PCB -maxdepth 1 -name "*.kicad_pcb" -print -quit)
+
+          if [ -z "$PCB_FILE" ]; then
+            echo "No KiCad PCB file found"
+            exit 1
+          fi
+
+          echo "Running DRC on $PCB_FILE"
+
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            -v ./fonts:/usr/local/share/fonts/custom:ro \
+            ghcr.io/kicad/kicad:10.0 \
+            kicad-cli pcb drc \
+            --exit-code-violations \
+            --output /dev/stdout \
+            --schematic-parity \
+            "/home/kicad/PCB/$(basename "$PCB_FILE")"

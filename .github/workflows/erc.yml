@@ -1,0 +1,42 @@
+name: KiCAD Schematic ERC
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  schematic-erc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: false
+          lfs: true
+
+      - name: Checkout private KiCad libraries
+        env:
+          PARTS_TOKEN: ${{ secrets.Key_To_Parts }}
+        run: |
+          git config --global url."https://x-access-token:${PARTS_TOKEN}@github.com/".insteadOf "https://github.com/"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Run ERC
+        run: |
+          SCH_FILE=$(find PCB -maxdepth 1 -name "*.kicad_sch" -print -quit)
+
+          if [ -z "$SCH_FILE" ]; then
+            echo "No KiCad schematic found"
+            exit 1
+          fi
+
+          echo "Running ERC on $SCH_FILE"
+
+          docker run --rm \
+            -v ./PCB:/home/kicad/PCB \
+            ghcr.io/kicad/kicad:10.0 \
+            kicad-cli sch erc \
+            --exit-code-violations \
+            --output /dev/stdout \
+            "/home/kicad/PCB/$(basename "$SCH_FILE")"

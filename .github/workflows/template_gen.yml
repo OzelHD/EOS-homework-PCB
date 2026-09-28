@@ -1,0 +1,29 @@
+name: Template generation
+
+on: [push]
+
+permissions:
+  contents: write
+
+jobs:
+  template-gen:
+    if: ${{ github.repository != 'OzelHD/ozelhd-PCB-project-template' && github.run_number == 1 }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Rename files
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: python3 .github/workflows/template_rename.py $REPO_NAME
+
+      - name: Commit files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Generate project from template"
+
+      - name: Push changes
+        run: git push
