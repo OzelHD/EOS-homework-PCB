@@ -76,24 +76,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        [
-          "hole_clearance|146950000|144235000|41a44309-afa5-48c2-a81d-28f52d964b51|caa0f177-67e5-4bcc-8ace-acdf1da02f77",
-          ""
-        ],
-        [
-          "hole_clearance|146950000|144235000|ccd58b69-67cf-4c5c-bfa4-2b43f0f57d56|caa0f177-67e5-4bcc-8ace-acdf1da02f77",
-          ""
-        ],
-        [
-          "hole_clearance|153050000|144235000|88da84a0-3748-497b-af41-9842ded1a22f|91038223-75e9-4839-9914-1903f88c0707",
-          ""
-        ],
-        [
-          "hole_clearance|153050000|144235000|adc35c47-1e2e-4eb6-bea5-417a5e03fb18|91038223-75e9-4839-9914-1903f88c0707",
-          ""
-        ]
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -286,7 +269,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "0.1"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -306,7 +289,12 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "lib_symbol_mismatch|1231900|1028700|7df0a152-52ab-4fd2-9d87-9cad8fff2e54|00000000-0000-0000-0000-000000000000|||",
+        "reshuffled some of the pins to be cleaner"
+      ]
+    ],
     "meta": {
       "version": 0
     },
@@ -541,7 +529,7 @@
     ]
   },
   "meta": {
-    "filename": "ozelhd-template-PCB.kicad_pro",
+    "filename": "EOS-homework-PCB.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -836,38 +824,26 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "ozelhd-template-PCB.kicad_sch",
-        "name": "ozelhd-template-PCB",
+        "filename": "EOS-homework-PCB.kicad_sch",
+        "name": "EOS-homework-PCB",
         "uuid": "e08d3e09-d805-4650-baae-a4ad395cf0c7"
       }
     ],
-    "used_designators": "",
+    "used_designators": "U1-2,U7,D1-2,L1-3,#PWR1-24,#PWR50-54,C1-19,Y1,FLT1,J1-2,J4,#FLG1-3,R1-7,R12-13,SW1",
     "variants": []
   },
   "sheets": [
     [
       "e08d3e09-d805-4650-baae-a4ad395cf0c7",
-      "hermes-template-PCB"
+      "EOS-homework-PCB"
     ],
     [
       "6c1587ca-4466-4912-a6c6-0394edd5f9c1",
       "Microcontroller"
     ],
     [
-      "66a70237-0ec7-461c-a4eb-6f8f8d4c4a1d",
-      "Power"
-    ],
-    [
-      "e8051718-b319-4171-98e1-b99d03d15ff9",
-      "CAN Transceiver"
-    ],
-    [
       "456f0e6a-8b20-4b1c-9c6b-72f1ba8c4140",
       "USB Connector"
-    ],
-    [
-      "978df539-a4e1-4acd-a01d-e40eea2e6ccb",
-      "Backplane connector, mounting"
     ]
   ],
   "text_variables": {},
