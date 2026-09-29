@@ -6,77 +6,11 @@
 	(paper "A4")
 	(title_block
 		(title "EOS Homework Board")
-		(date "2026-09-28")
+		(date "2026-09-29")
 		(rev "0.1")
 		(comment 1 "dcarocci")
 	)
 	(lib_symbols)
-	(bus
-		(pts
-			(xy 114.3 31.75) (xy 177.8 31.75)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2474e245-7f6a-43d3-92cb-138023f7154a")
-	)
-	(sheet
-		(at 177.8 25.4)
-		(size 38.1 12.7)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "456f0e6a-8b20-4b1c-9c6b-72f1ba8c4140")
-		(property "Sheetname" "USB Connector"
-			(at 177.8 24.6884 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "usb.kicad_sch"
-			(at 177.8 38.6846 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(pin "{USB_D+,USB_D-}" bidirectional
-			(at 177.8 31.75 180)
-			(uuid "5cb01d74-1999-4efa-9ef3-b85aed1acdfe")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(instances
-			(project "EOS-homework-PCB"
-				(path "/e08d3e09-d805-4650-baae-a4ad395cf0c7"
-					(page "5")
-				)
-			)
-		)
-	)
 	(sheet
 		(at 76.2 25.4)
 		(size 38.1 127)
@@ -113,16 +47,6 @@
 					(size 1.27 1.27)
 				)
 				(justify left top)
-			)
-		)
-		(pin "{USB_D+,USB_D-}" bidirectional
-			(at 114.3 31.75 0)
-			(uuid "20d43866-68a7-4e0b-8640-03406984ff40")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
 			)
 		)
 		(instances

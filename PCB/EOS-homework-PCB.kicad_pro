@@ -53,7 +53,7 @@
           "border_display_style": 2,
           "border_hatch_pitch": 0.5,
           "corner_radius": 0.0,
-          "corner_smoothing": 0,
+          "corner_smoothing": 2,
           "fill_mode": 0,
           "hatch_gap": 1.5,
           "hatch_orientation": 0.0,
@@ -64,9 +64,9 @@
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 2,
-          "remove_islands": 0,
-          "thermal_relief_gap": 0.5,
-          "thermal_relief_spoke_width": 0.5
+          "remove_islands": 1,
+          "thermal_relief_gap": 0.4,
+          "thermal_relief_spoke_width": 0.25
         }
       },
       "diff_pair_dimensions": [
@@ -74,9 +74,31 @@
           "gap": 0.0,
           "via_gap": 0.0,
           "width": 0.0
+        },
+        {
+          "gap": 0.22,
+          "via_gap": 0.5,
+          "width": 0.17
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "hole_clearance|146450000|84755000|10162a88-6238-4b72-9202-e4f353b7e400|226bb7c3-7a6a-40ef-9051-2ff47ace3a9f",
+          ""
+        ],
+        [
+          "hole_clearance|146450000|84755000|ef0cca2d-22e7-48e9-b846-84ad96d7944c|226bb7c3-7a6a-40ef-9051-2ff47ace3a9f",
+          ""
+        ],
+        [
+          "hole_clearance|152550000|84755000|2f43020f-34a1-4947-9dad-4ccf3a09769c|6ec76a36-774a-48aa-b132-25854a0cc0cf",
+          ""
+        ],
+        [
+          "hole_clearance|152550000|84755000|8375a17d-82a6-473c-a7ea-06d4259959da|6ec76a36-774a-48aa-b132-25854a0cc0cf",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -215,6 +237,7 @@
       "track_widths": [
         0.0,
         0.15,
+        0.19,
         0.3,
         0.5,
         0.6,
@@ -562,8 +585,8 @@
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "CAN",
-        "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "priority": 1,
+        "pcb_color": "rgb(44, 0, 255)",
+        "priority": 5,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.15,
         "tuning_profile": "",
@@ -572,19 +595,63 @@
         "wire_width": 6
       },
       {
+        "bus_width": 12,
+        "line_style": 0,
+        "name": "GND",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "tuning_profile": "",
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "line_style": 0,
+        "name": "PWR",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "tuning_profile": "",
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "line_style": 0,
+        "name": "RF",
+        "pcb_color": "rgb(255, 233, 0)",
+        "priority": 3,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.19,
+        "tuning_profile": "",
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "line_style": 0,
+        "name": "SWD",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "tuning_profile": "",
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
         "clearance": 0.15,
         "diff_pair_gap": 0.14,
         "diff_pair_width": 0.2,
+        "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "USB",
-        "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "priority": 0,
+        "pcb_color": "rgb(140, 144, 255)",
+        "priority": 4,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.2,
         "tuning_profile": "",
         "via_diameter": 0.5,
-        "via_drill": 0.3
+        "via_drill": 0.3,
+        "wire_width": 6
       }
     ],
     "meta": {
@@ -606,8 +673,20 @@
         "pattern": "*USB*"
       },
       {
-        "netclass": "CAN",
-        "pattern": "CAN_*"
+        "netclass": "RF",
+        "pattern": "*RF*"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "*+*V"
+      },
+      {
+        "netclass": "GND",
+        "pattern": "GND"
+      },
+      {
+        "netclass": "SWD",
+        "pattern": "*/SW*"
       }
     ]
   },
@@ -728,19 +807,19 @@
           "group_by": true,
           "label": "Part No.",
           "name": "Part No.",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
@@ -765,6 +844,36 @@
           "label": "Description",
           "name": "Description",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Manifacturer",
+          "name": "Manifacturer",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Manifacturer Part Number",
+          "name": "Manifacturer Part Number",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Distributor Link",
+          "name": "Distributor Link",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "KLC_S3.3",
+          "name": "KLC_S3.3",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "KLC_S4.1",
+          "name": "KLC_S4.1",
+          "show": false
         }
       ],
       "filter_string": "",
@@ -772,7 +881,7 @@
       "include_excluded_from_bom": false,
       "name": "",
       "sort_asc": true,
-      "sort_field": "Reference"
+      "sort_field": "Distributor Link"
     },
     "bus_aliases": {},
     "connection_grid_size": 50.0,
@@ -829,7 +938,7 @@
         "uuid": "e08d3e09-d805-4650-baae-a4ad395cf0c7"
       }
     ],
-    "used_designators": "U1-2,U7,D1-2,L1-3,#PWR1-24,#PWR50-54,C1-19,Y1,FLT1,J1-2,J4-5,#FLG1-3,R1-7,R12-13,SW1",
+    "used_designators": "U1-3,U7,D1-4,L1-3,#PWR1-33,#PWR50-54,C1-19,Y1,FLT1,J1-5,#FLG1-3,R1-9,R12-13,SW1-2,X1-2,FID1-3,H1-5,TP1-4",
     "variants": []
   },
   "sheets": [
@@ -840,10 +949,6 @@
     [
       "6c1587ca-4466-4912-a6c6-0394edd5f9c1",
       "Microcontroller"
-    ],
-    [
-      "456f0e6a-8b20-4b1c-9c6b-72f1ba8c4140",
-      "USB Connector"
     ]
   ],
   "text_variables": {},
