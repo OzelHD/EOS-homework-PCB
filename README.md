@@ -2,7 +2,7 @@
 # EOS Homework Board
 
 This board is a tutorial follow-along for the EOS homework assignment. It is designed to be a simple board that can be used to learn about PCB design and manufacturing. [Layout Video](https://www.youtube.com/watch?v=nkHFoxe0mrU), [PCB video](https://www.youtube.com/watch?v=PlXd3lLZ4vc)
-
+:)
 # Include documentation here
 
 [![DRC](https://github.com/OzelHD/EOS-homework-PCB/actions/workflows/drc.yml/badge.svg)](https://github.com/OzelHD/EOS-homework-PCB/actions/workflows/drc.yml)
